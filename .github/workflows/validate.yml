@@ -1,0 +1,29 @@
+name: Validate
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up NodeJS
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Check
+        run: |
+          npx nx run-many --all -t lint --output-style=static
+          npx nx run-many --all -t test --output-style=static
